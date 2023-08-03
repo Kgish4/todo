@@ -1,26 +1,62 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { FC, useCallback, useEffect, useState } from "react";
+import Modal, { IModal } from "./components/Modal/Modal";
+import Search from "./components/Search/Search";
+import UserCard from "./components/UserCard/UserCard";
+import { useActions } from "./hooks/useActions";
+import { useTypedSelector } from "./hooks/useTypedSelector";
+import searchFragment from "./utils/highlightText";
 
-function App() {
+const App: FC = () => {
+  const [modalData, setModalData] = useState<Omit<IModal, "onCancel"> | null>(
+    null
+  );
+  const { fetchUsers } = useActions();
+  const { usersList, filter } = useTypedSelector((state) => state.users);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const openModal = useCallback(
+    (address: string, company: string): void => {
+      setModalData({
+        address,
+        company,
+      } as IModal);
+    },
+    [usersList]
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      {modalData && (
+        <Modal onCancel={() => setModalData(null)} {...modalData} />
+      )}
+      <Search />
+      <ul className="cards-container">
+        {usersList.map((user) => {
+          const userName = searchFragment(user.username, filter);
+          const name = searchFragment(user.name, filter);
+          const email = searchFragment(user.email, filter);
+          if (filter && !userName && !name && !email) {
+            return null;
+          }
+          return (
+            <UserCard
+              key={user.id}
+              id={user.id}
+              username={user.username}
+              name={user.name}
+              email={user.email}
+              address={`${user.address.city} ${user.address.street} ${user.address.suite}`}
+              company={user.company.name}
+              onClick={openModal}
+            />
+          );
+        })}
+      </ul>
     </div>
   );
-}
+};
 
 export default App;

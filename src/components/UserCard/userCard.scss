@@ -1,0 +1,51 @@
+$breakpoint-phone: 480px;
+
+.user-card {
+  max-width: 300px;
+  list-style: none;
+  flex-shrink: 1;
+  width: 100%;
+  margin: 5px;
+  padding: 5px;
+  position: relative;
+  cursor: pointer;
+
+  &_name {
+    text-align: center;
+    font: normal small-caps 22px fantasy;
+    @media (max-width: $breakpoint-phone) {
+      font: normal small-caps 16px fantasy;
+    }
+  }
+  &_username {
+    padding-right: 70px;
+    font: 18px sans-serif;
+    @media (max-width: $breakpoint-phone) {
+      font: normal small-caps 14px fantasy;
+    }
+  }
+  &_email {
+    padding-right: 70px;
+    font: 16px sans-serif;
+    @media (max-width: $breakpoint-phone) {
+      font: normal small-caps 12px fantasy;
+    }
+  }
+  &_remove {
+    color: white;
+    padding: 3px;
+    border-radius: 10px;
+    font: 16px sans-serif;
+    background-color: orange;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    @media (max-width: $breakpoint-phone) {
+      font: 12px sans-serif;
+    }
+  }
+
+  @media (max-width: $breakpoint-phone) {
+    margin: 0;
+  }
+}
